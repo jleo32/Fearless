@@ -77,13 +77,33 @@ def add_item(item_name):
 
     :param item_name: String of name to add
 
-    :return: True is insertion is successful
+    :return: True if insertion is successful
     """
     connection = g.db
     cursor = g.db.cursor()
 
     try:
         cursor.execute(f"INSERT INTO items('name') VALUES ('{item_name}');")
+        connection.commit()
+    except Exception as e:
+        print('Unable to add item: ' + str(e))
+        return False
+    return True
+
+
+def add_all_items(items):
+    """
+    Adds new items to the `items` table
+
+    :param items: list of names to add
+
+    :return: True if insertion is successful
+    """
+    connection = g.db
+    cursor = g.db.cursor()
+
+    try:
+        cursor.executemany("INSERT INTO items('name') VALUES (?);", items)
         connection.commit()
     except Exception as e:
         print('Unable to add item: ' + str(e))
@@ -121,7 +141,7 @@ def delete_item(item_id):
 
     :param item_id: String of id to delete
 
-    :return: True is deletion is successful
+    :return: True if deletion is successful
     """
     if item_id is None:
         return False
@@ -142,7 +162,7 @@ def delete_all_items():
     """
     Deletes all items in the `items` table
 
-    :return: True is deletion is successful
+    :return: True if deletion is successful
     """
     connection = g.db
     cursor = g.db.cursor()
