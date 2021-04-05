@@ -4,7 +4,7 @@ Author: Justin Leo
 
 ## Overview:
 
-The simple application allows a user to add, delete, and retrieve items from a persistent SQL database.
+This simple application allows a user to add, delete, retrieve, and update items from a persistent SQL database.
 
 ## Technologies
 
