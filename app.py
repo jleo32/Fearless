@@ -22,8 +22,9 @@ def app_teardown_request(e):
 
 
 @app.route('/item', methods=['GET', 'POST', 'DELETE'])
-@app.route('/item/<item_id>', methods=['GET', 'UPDATE', 'DELETE'])
-def item(item_id=None):
+@app.route('/item/<item_id>', methods=['GET', 'DELETE'])
+@app.route('/item/<item_id>/<name>', methods=['PUT'])
+def item(item_id=None, name=None):
     """
     1. Get current items
     2. Set (add) item
@@ -72,6 +73,22 @@ def item(item_id=None):
         else:
             success = False
             message = 'Unable to add items'
+            response_code = 400
+    elif request.method == 'PUT':
+        """
+        PUT will update an item in the database
+        
+        Acceptable url:
+        
+        /item/1/name1
+        """
+
+        if item_id is not None and name is not None:
+            success = database_service.update_item(item_id, name)
+            message = 'Successfully updated item'
+        else:
+            success = False
+            message = 'Unable to update item'
             response_code = 400
     elif request.method == 'DELETE':
         """
