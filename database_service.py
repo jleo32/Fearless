@@ -6,12 +6,32 @@ from utils import convert_item_tuples
 
 def init_db():
     """
-    Initializes database tables for application if they do not exist.
+    Initializes database table for application if they do not exist.
 
     Should only be called once at startup.
     """
 
     db = connect_db()
+
+    cursor = db.cursor()
+
+    with open('scheme.sql', 'r') as f:
+        cursor.execute(f.read())
+
+    db.close()
+
+
+def init_test_db():
+    """
+    Initializes TEST database table for application if they do not exist.
+
+    Should only be called once at startup.
+    """
+
+    try:
+        db = sqlite3.connect(':memory:')
+    except Exception as e:
+        print('Unable to connect to database: ' + str(e))
 
     cursor = db.cursor()
 

@@ -80,6 +80,17 @@ Example: `PUT - /item/1/name1`
 
 Example: `DELETE - /item/1`
 
+## Testing:
+
+Basic tests are included in tests.py. 
+
+```shell
+pytest tests.py
+```
+
+Note: the tests assume the database exists but is empty. This requires one startup of the application.
+
+Manual tests are available in the Postman collection.
 
 ## Caveats:
 
@@ -95,3 +106,4 @@ Example: `DELETE - /item/1`
 - Filter/Search endpoint for items
 - Update response codes for better response handling
 - Data return value should be removed for some methods if it's not applicable
+- Automate test db initialization
