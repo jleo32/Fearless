@@ -42,7 +42,8 @@ http://0.0.0.0:3000/item
 
 ## Caveats:
 
-- DELETE will return success even if item id does not exist
+- DELETE will return success even if item id does not exist; should return a 404
+- GET item by id should return a 404 if item does not exist
 
 ## Future iterations:
 
@@ -50,3 +51,4 @@ http://0.0.0.0:3000/item
 - Update delete method to return message if item id does not exist
 - Pagination for GET items
 - Filter/Search endpoint for items
+- Update response codes for better response handling
