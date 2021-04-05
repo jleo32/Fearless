@@ -1,6 +1,8 @@
 import sqlite3
 from flask import g
 
+from utils import convert_item_tuples
+
 
 def init_db():
     """
@@ -49,6 +51,13 @@ def close_db():
 
 
 def get_all_items():
+    """
+    Fetches all items in the `items` table
+
+    Result from query is converted from tuples to dict
+
+    :return: List of items as dict's
+    """
     cursor = g.db.cursor()
 
     try:
@@ -57,7 +66,9 @@ def get_all_items():
         print('Unable to retrieve items: ' + str(e))
         return []
 
-    return cursor.fetchall()
+    db_result = cursor.fetchall()
+
+    return convert_item_tuples(db_result)
 
 
 def add_item(item_name):
