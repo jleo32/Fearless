@@ -176,5 +176,22 @@ def delete_all_items():
     return True
 
 
-def update_items(items):
-    pass
+def update_item(item_id, item_name):
+    """
+    Updates an item in the `items` table
+
+    :param item_id: id to update
+    :param item_name: new name
+
+    :return: True if update is successful
+    """
+    connection = g.db
+    cursor = g.db.cursor()
+
+    try:
+        cursor.execute("UPDATE items SET name = ? WHERE id = ?;", (item_name, item_id))
+        connection.commit()
+    except Exception as e:
+        print('Unable to update item: ' + str(e))
+        return False
+    return True
