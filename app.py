@@ -1,7 +1,6 @@
 from flask import Flask, g, request
 
 import database_service
-# from item import Item
 
 app = Flask(__name__)
 
@@ -41,6 +40,7 @@ def item(item_id=None):
 
     success = True
     data = []
+    response_code = 200
 
     if request.method == 'GET':
         """
@@ -63,27 +63,40 @@ def item(item_id=None):
 
         if name is not None:
             success = database_service.add_item(request.form.get('name'))
-        else:
-            success = False
-
-        if success:
             message = 'Successfully added item'
         else:
+            success = False
             message = 'Unable to add item'
+            response_code = 400
     elif request.method == 'DELETE':
         """
-        DELETE will delete an item by the id in the url parameter
+        DELETE will delete an item by the id in the url parameter or delete all if none exists
         
         Note: deletion is successful even if the item id does not exist because the query was successful even
         if the row does not exist
         """
-        success = database_service.delete_item(item_id)
+        if item_id is not None:
+            """
+            If the item id exists, delete the item
+            """
+            success = database_service.delete_item(item_id)
 
-        if success:
-            message = 'Successfully deleted item'
+            if success:
+                message = 'Successfully deleted item'
+            else:
+                message = 'Unable to delete item with id: ' + item_id
         else:
-            message = 'Unable to delete item with id: ' + item_id
+            """
+            If no item id is in the url, delete all items
+            """
+            success = database_service.delete_all_items()
+
+            if success:
+                message = 'Successfully deleted all items'
+            else:
+                message = 'Unable to delete all items'
+                response_code = 400
     else:
         return {'success': False, 'message': 'Unimplemented HTTP method', 'data': []}, 405
 
-    return {'success': success, 'message': message, 'data': data}, 200
+    return {'success': success, 'message': message, 'data': data}, response_code
