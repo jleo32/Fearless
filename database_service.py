@@ -138,5 +138,23 @@ def delete_item(item_id):
     return True
 
 
+def delete_all_items():
+    """
+    Deletes all items in the `items` table
+
+    :return: True is deletion is successful
+    """
+    connection = g.db
+    cursor = g.db.cursor()
+
+    try:
+        cursor.execute('DELETE FROM items;')
+        connection.commit()
+    except Exception as e:
+        print('Unable to delete items: ' + str(e))
+        return False
+    return True
+
+
 def update_items(items):
     pass
