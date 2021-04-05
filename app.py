@@ -31,9 +31,10 @@ def item(item_id=None):
 
     Supported methods:
 
-    GET: gets items from database
-    POST: adds an item to the database
-    DELETE: deletes an item from the database
+    GET: Gets items from database
+         If a url parameter exists, the method will try to find an item with that id
+    POST: Adds an item to the database
+    DELETE: Deletes an item from the database
 
     :return: json representation of completed action
     """
@@ -44,9 +45,16 @@ def item(item_id=None):
     if request.method == 'GET':
         """
         Get will retrieve all items in the `items` table
+        
+        If a url parameter exists, the method will try to find an item with that id
         """
-        message = 'Successfully retrieved items'
-        data = database_service.get_all_items()
+
+        if item_id is not None:
+            data = database_service.get_item_by_id(item_id)
+            message = 'Successfully retrieved item'
+        else:
+            message = 'Successfully retrieved items'
+            data = database_service.get_all_items()
     elif request.method == 'POST':
         """
         POST will add a new item to the `items` table
@@ -76,6 +84,6 @@ def item(item_id=None):
         else:
             message = 'Unable to delete item with id: ' + item_id
     else:
-        return {'success': False, 'message': 'Unimplemented HTTP method', 'data': []}, 400
+        return {'success': False, 'message': 'Unimplemented HTTP method', 'data': []}, 405
 
     return {'success': success, 'message': message, 'data': data}, 200
