@@ -1,6 +1,7 @@
 from flask import Flask, g, request
 
 import database_service
+from utils import convert_csv_to_list
 
 app = Flask(__name__)
 
@@ -57,16 +58,20 @@ def item(item_id=None):
             data = database_service.get_all_items()
     elif request.method == 'POST':
         """
-        POST will add a new item to the `items` table
+        POST will add new items to the `items` table
+        
+        Acceptable body:
+        
+        names: name1,name2,name3
         """
-        name = request.form.get('name')
+        names = convert_csv_to_list(request.form.get('names', []))
 
-        if name is not None:
-            success = database_service.add_item(request.form.get('name'))
-            message = 'Successfully added item'
+        if names:
+            success = database_service.add_all_items(names)
+            message = 'Successfully added items'
         else:
             success = False
-            message = 'Unable to add item'
+            message = 'Unable to add items'
             response_code = 400
     elif request.method == 'DELETE':
         """
