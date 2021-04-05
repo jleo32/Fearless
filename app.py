@@ -1,7 +1,7 @@
 from flask import Flask, g, request
 
 import database_service
-from item import Item
+# from item import Item
 
 app = Flask(__name__)
 
@@ -43,15 +43,25 @@ def item():
         message = 'Successfully retrieved items'
         data = database_service.get_all_items()
     elif request.method == 'POST':
-        new_item = Item(request.form.get('id'), request.form.get('name'))
+        """
+        POST will add a new item to the `items` table
+        """
+        name = request.form.get('name')
 
-        database_service.add_item(new_item)
+        if name is not None:
+            success = database_service.add_item(request.form.get('name'))
+        else:
+            success = False
 
-        message = 'Successfully added item'
+        if success:
+            message = 'Successfully added item'
+        else:
+            message = 'Unable to add item'
     elif request.method == 'DELETE':
         database_service.delete_item(request.form.get('id'))
 
         message = 'Successfully delete item'
     else:
         return {'success': False, 'message': 'Unimplemented HTTP method', 'data': []}, 400
+
     return {'success': True, 'message': message, 'data': data}, 200
