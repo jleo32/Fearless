@@ -4,6 +4,16 @@ Author: Justin Leo
 
 ## Overview:
 
+The simple application allows a user to add, delete, and retrieve items from a persistent SQL database.
+
+## Technologies
+
+- Python 3.8
+- Flask 1.1.2
+- SQLite
+- Postman
+- Docker
+
 ## How to:
 
 To build the docker container, run:
@@ -40,6 +50,31 @@ http://0.0.0.0:3000/item
 
 ## API:
 
+### GET
+
+`/item` - Retrieves all items in the database
+
+`/item/<item_id>` - Retrieves the item with the specified id, empty list if it does not exist
+
+Example: `GET - /item/1`
+
+### POST
+
+`/item` - Adds list of names to database
+
+Body: `names: <comma separated list of names>`
+
+Example: `POST - names: name1,name2,name3`
+
+### DELETE
+
+`/item` - Deletes all items in the database
+
+`/item/<item_id>` - Deletes an item with the specified id
+
+Example: `DELETE - /item/1`
+
+
 ## Caveats:
 
 - DELETE will return success even if item id does not exist; should return a 404
@@ -52,3 +87,4 @@ http://0.0.0.0:3000/item
 - Pagination for GET items
 - Filter/Search endpoint for items
 - Update response codes for better response handling
+- Data return value should be removed for some methods if it's not applicable
