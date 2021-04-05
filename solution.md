@@ -66,6 +66,12 @@ Body: `names: <comma separated list of names>`
 
 Example: `POST - names: name1,name2,name3`
 
+### PUT
+
+`/item/<item_id>/<name>` - Updates item with new name by id
+
+Example: `PUT - /item/1/name1`
+
 ### DELETE
 
 `/item` - Deletes all items in the database
@@ -78,7 +84,8 @@ Example: `DELETE - /item/1`
 ## Caveats:
 
 - DELETE will return success even if item id does not exist; should return a 404
-- GET item by id should return a 404 if item does not exist
+- GET will return success even if item id does not exist; should return a 404
+- PUT item will return success even if the item id does not exist; should return a 404
 
 ## Future iterations:
 
