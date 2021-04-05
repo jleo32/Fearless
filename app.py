@@ -27,15 +27,19 @@ def app_teardown_request(e):
 def item(item_id=None, name=None):
     """
     1. Get current items
-    2. Set (add) item
-    3. Delete item
+    2. Get item by id
+    3. Add items
+    4. Delete item by id
+    5. Delete all items
+    6. Update an item
 
     Supported methods:
 
     GET: Gets items from database
          If a url parameter exists, the method will try to find an item with that id
-    POST: Adds an item to the database
-    DELETE: Deletes an item from the database
+    POST: Adds items to the database
+    PUT: Updates an item in the database
+    DELETE: Deletes an item from the database if id is pass; else deletes all items
 
     :return: json representation of completed action
     """
@@ -84,7 +88,7 @@ def item(item_id=None, name=None):
         """
 
         if item_id is not None and name is not None:
-            success = database_service.update_item(item_id, name)
+            success = database_service.update_item_by_id(item_id, name)
             message = 'Successfully updated item'
         else:
             success = False
@@ -101,7 +105,7 @@ def item(item_id=None, name=None):
             """
             If the item id exists, delete the item
             """
-            success = database_service.delete_item(item_id)
+            success = database_service.delete_item_by_id(item_id)
 
             if success:
                 message = 'Successfully deleted item'

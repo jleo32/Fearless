@@ -50,6 +50,30 @@ def close_db():
         db.close()
 
 
+def get_item_by_id(item_id):
+    """
+    Fetches item in the `items` table by `id`
+
+    Will return an empty list if the item does not exist
+
+    :return: List with item as dict
+    """
+    cursor = g.db.cursor()
+
+    try:
+        cursor.execute(f"SELECT * FROM items WHERE id = {item_id};")
+    except Exception as e:
+        print('Unable to retrieve item: ' + str(e))
+        return []
+
+    db_result = cursor.fetchone()
+
+    if db_result:
+        return convert_item_tuples([db_result])
+    else:
+        return []
+
+
 def get_all_items():
     """
     Fetches all items in the `items` table
@@ -106,36 +130,12 @@ def add_all_items(items):
         cursor.executemany("INSERT INTO items('name') VALUES (?);", items)
         connection.commit()
     except Exception as e:
-        print('Unable to add item: ' + str(e))
+        print('Unable to add items: ' + str(e))
         return False
     return True
 
 
-def get_item_by_id(item_id):
-    """
-    Fetches item in the `items` table by `id`
-
-    Will return an empty list if the item does not exist
-
-    :return: List with item as dict
-    """
-    cursor = g.db.cursor()
-
-    try:
-        cursor.execute(f"SELECT * FROM items WHERE id = {item_id};")
-    except Exception as e:
-        print('Unable to retrieve item: ' + str(e))
-        return []
-
-    db_result = cursor.fetchone()
-
-    if db_result:
-        return convert_item_tuples([db_result])
-    else:
-        return []
-
-
-def delete_item(item_id):
+def delete_item_by_id(item_id):
     """
     Deletes a new item with `item_id = id` to the `items` table
 
@@ -176,7 +176,7 @@ def delete_all_items():
     return True
 
 
-def update_item(item_id, item_name):
+def update_item_by_id(item_id, item_name):
     """
     Updates an item in the `items` table
 
