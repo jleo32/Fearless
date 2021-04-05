@@ -40,6 +40,9 @@ def item():
     data = []
 
     if request.method == 'GET':
+        """
+        Get will retrieve all items in the `items` table
+        """
         message = 'Successfully retrieved items'
         data = database_service.get_all_items()
     elif request.method == 'POST':
