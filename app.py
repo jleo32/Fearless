@@ -22,7 +22,8 @@ def app_teardown_request(e):
 
 
 @app.route('/item', methods=['GET', 'POST', 'DELETE'])
-def item():
+@app.route('/item/<item_id>', methods=['GET', 'UPDATE', 'DELETE'])
+def item(item_id=None):
     """
     1. Get current items
     2. Set (add) item
@@ -37,6 +38,7 @@ def item():
     :return: json representation of completed action
     """
 
+    success = True
     data = []
 
     if request.method == 'GET':
@@ -61,10 +63,19 @@ def item():
         else:
             message = 'Unable to add item'
     elif request.method == 'DELETE':
-        database_service.delete_item(request.form.get('id'))
+        """
+        DELETE will delete an item by the id in the url parameter
+        
+        Note: deletion is successful even if the item id does not exist because the query was successful even
+        if the row does not exist
+        """
+        success = database_service.delete_item(item_id)
 
-        message = 'Successfully delete item'
+        if success:
+            message = 'Successfully deleted item'
+        else:
+            message = 'Unable to delete item with id: ' + item_id
     else:
         return {'success': False, 'message': 'Unimplemented HTTP method', 'data': []}, 400
 
-    return {'success': True, 'message': message, 'data': data}, 200
+    return {'success': success, 'message': message, 'data': data}, 200

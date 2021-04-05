@@ -95,8 +95,27 @@ def get_item_by_id(item_id):
     pass
 
 
-def delete_item(id):
-    pass
+def delete_item(item_id):
+    """
+    Deletes a new item with `item_id = id` to the `items` table
+
+    :param item_id: String of id to delete
+
+    :return: True is deletion is successful
+    """
+    if item_id is None:
+        return False
+
+    connection = g.db
+    cursor = g.db.cursor()
+
+    try:
+        cursor.execute(f"DELETE FROM items WHERE id='{item_id}';")
+        connection.commit()
+    except Exception as e:
+        print('Unable to delete item: ' + str(e))
+        return False
+    return True
 
 
 def update_items(items):
