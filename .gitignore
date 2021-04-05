@@ -1,2 +1,4 @@
 /.idea
 Fearless.iml
+*.pyc
+fearless.db

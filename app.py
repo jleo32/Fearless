@@ -1,14 +1,32 @@
-from flask import Flask, url_for
+from flask import Flask, g, request
+
+import database_service
+from item import Item
 
 app = Flask(__name__)
 
 
+@app.before_first_request
+def app_before_first_request():
+    database_service.init_db()
+
+
+@app.before_request
+def app_before_request():
+    g.db = database_service.connect_db()
+
+
+@app.teardown_request
+def app_teardown_request(e):
+    database_service.close_db()
+
+
 @app.route('/item', methods=['GET', 'POST', 'DELETE'])
-def index(request):
+def item():
     """
     1. Get current items
-    2. Set items
-    3. Delete items
+    2. Set (add) item
+    3. Delete item
 
     Supported methods:
 
@@ -16,19 +34,24 @@ def index(request):
     POST: adds an item to the database
     DELETE: deletes an item from the database
 
-    :param request: Request object used to perform action in API
-    :return:
+    :return: json representation of completed action
     """
+
+    data = []
 
     if request.method == 'GET':
         message = 'Successfully retrieved items'
-        data = []
+        data = database_service.get_all_items()
     elif request.method == 'POST':
+        new_item = Item(request.form.get('id'), request.form.get('name'))
+
+        database_service.add_item(new_item)
+
         message = 'Successfully added item'
-        data = []
     elif request.method == 'DELETE':
+        database_service.delete_item(request.form.get('id'))
+
         message = 'Successfully delete item'
-        data = []
     else:
         return {'success': False, 'message': 'Unimplemented HTTP method', 'data': []}, 400
     return {'success': True, 'message': message, 'data': data}, 200
